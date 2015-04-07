@@ -1,0 +1,24 @@
+{
+  "name": "angular-colorize",
+  "version": "0.0.0",
+  "homepage": "https://github.com/sjeedandi/angular-colorize",
+  "authors": [
+    "sjeedandi <info@rogiervankleef.com>"
+  ],
+  "description": "Color utilities",
+  "main": "dist/angular-colorize.js",
+  "keywords": [
+    "mix",
+    "colors",
+    "angular",
+    "contrast"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
