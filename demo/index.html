@@ -1,0 +1,68 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>sjeedandi - angular-colorize</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  </head>
+  <body ng-controller="ngColorizeController" >
+    <div class="jumbotron" ng-style="styleObject">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <h1>Angular Colorize</h1>
+            <p>Mix colors based on number</p>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+    <div class="container">
+      <div class="row">
+        
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="">Value</label>
+            <div>
+              <input type="range" min="range.min" max="range.max" ng-model="range.value">
+            </div>
+            <span class="help-block">
+              Change the color
+            </span>
+          </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="">Threshold</label>
+            <div>
+              <input type="range" min="0" max="1" step="0.05" ng-model="options.contrast.threshold">
+            </div>
+            <span class="help-block">
+              Set the threshold level for the contrast color
+            </span>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="">Colors</label>
+            <div>
+              <input type="text" ng-list ng-model="options.colors" class="form-control">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="app.js"></script>
+    <script src="../src/angular-colorize.js"></script>
+  </body>
+</html>

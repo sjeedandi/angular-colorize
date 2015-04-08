@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  angular.module('sdColors', [])
+  angular.module('ngColorize', [])
     
-    .provider('sdColors', function () {
+    .provider('ngColorize', function () {
       
       var options = {
         range: {
@@ -12,10 +12,10 @@
         },
         contrast: {
           light: '255,255,255',
-          dark: '1,1,1',
-          threshold: 0.42
+          dark: '10,10,10',
+          threshold: 0.52
         },
-        colors: ['#428bca', '#5cb85c', '#f0ad4e', '#d9534f'],
+        colors: ['#f5f5f5', '#428bca', '#5cb85c', '#f0ad4e', '#d9534f', '#000000'], // '#C5FC8F','#5CCDE4', '#F8D164', '#DC3033', '#092F74',
         factor: 0.3,
         opacity: 1,
         format: 'rgba',
@@ -31,9 +31,9 @@
       };
     })
 
-    .service('sdColorsService', function (sdColors) {
+    .service('ngColorizeService', function (ngColorize) {
       
-      var options = sdColors;
+      var options = ngColorize;
 
       return function (value) {
         
@@ -42,9 +42,9 @@
          * @method factor
          * @return {Number}
          */
-        var factor = function (value) {
+        var factor = function (value, range) {
           
-          var f = value / 100;
+          var f = value / range;
           
           return f;
         
@@ -60,43 +60,24 @@
          */
         var getColor =  function (value) {
           
-          var a, b, p, color, obj,
-          f = 1 - factor(value);
-          
-          switch(true) {
-            case (f < 0.25):
-              a = 0;
-              b = 1;
-              p =  f / 0.25;
-              break;
-            case (f >= 0.25 && f < 0.5):
-              a = 1;
-              b = 2;
-              p = (f - 0.25) / 0.25;
-              break;
-            case (f >= 0.5 && f < 0.75):
-              a = 2;
-              b = 3;
-              p = (f - 0.5) / 0.25;
-              break;
-            case (f >= 0.75 && f < 1):
-              a = 3;
-              b = 4;
-              p = (f - 0.75) / 0.25;
-              break;
-            case (f >= 1):
-              a = 4;
-              b = 5;
-              p = (f-1)/f;
-              break;
-            default:
-              a = 5;
-              b = 5;
-              p = 1;
-              break;
-          }
-
-          obj = mix(options.colors[a], options.colors[b], 1 - p);
+          // Get the range 
+          var range = options.range.max - options.range.min,  
+          // Get the number of divisions
+          divisions = options.colors.length - 1,
+          // Get the length of one step
+          step  = range / divisions,
+          // Calculate the factor
+          f = 1 - factor(value, range),
+          // The ratio between the colors a and b 
+          p =  1 - ((value % step) * divisions) / 100,
+          // The index of the first color
+          index = Math.floor(value/step),
+          // The start color
+          a = options.colors[index],
+          // The end color (or last color when the first color is the last)
+          b = options.colors[index+1] || options.colors[index],
+          // Mix the colors
+          obj = mix(a,b, p);
           
           return {
             0: obj,
@@ -108,6 +89,12 @@
         };
 
 
+        /**
+         * @method contrast
+         * @param  {Color} color
+         * @param  {Object} options
+         * @return {Color}
+         */
         var contrast = function (color, options) {
 
           var light = options.light;
@@ -115,9 +102,9 @@
           
           // Figure out which is actually light and dark!
           if (luma(dark) > luma(light)) {
-              var t = light;
+              var tmp = light;
               light = dark;
-              dark = t;
+              dark = tmp;
           }
           // Return contrasting color
           if (luma(color) < options.threshold) {
@@ -172,27 +159,27 @@
          * Convert hexColor to RGB
          * @method convert
          * @param  {Color} hex
-         * @return {Color}
+         * @return {Color} rgb
          */
         var convert = function (hex) {
           
           var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
           
-          hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-              return r + r + g + g + b + b;
+          hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+            return r + r + g + g + b + b;
           });
           
           var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
           
           return result ? {
-              red: parseInt(result[1], 16),
-              green: parseInt(result[2], 16),
-              blue: parseInt(result[3], 16)
+            red: parseInt(result[1], 16),
+            green: parseInt(result[2], 16),
+            blue: parseInt(result[3], 16)
           } : null;
 
         };
 
-        return value ? getColor(value) : null;
+        return value ? getColor(parseInt(value)) : null;
       
       };
 
