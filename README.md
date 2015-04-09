@@ -11,6 +11,8 @@ http://sjeedandi.github.io/angular-colorize
 
 ####Usage
 
+    // js
+    
     var app = module('app',['ngColorize']);
     
     app.controller('appController', ['$scope', 'ngColorizeService', function ($scope, ngColorizeService) {
@@ -18,6 +20,14 @@ http://sjeedandi.github.io/angular-colorize
         backgroundColor: ngColorizeService(45).rgba
       };
     }]);
+    
+    // html
+    
+    <div ng-controller="appController">
+        <div ng-style="styleObject">
+            <h1>Colorized Background</h1>
+        </div>
+    </div>
   
   
 ####Configuration
